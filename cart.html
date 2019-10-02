@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+	<title>IRMA demo</title>
+
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+	<!-- Bootstrap -->
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+
+	<!-- Slick -->
+	<link type="text/css" rel="stylesheet" href="css/slick.css" />
+	<link type="text/css" rel="stylesheet" href="css/slick-theme.css" />
+
+	<!-- nouislider -->
+	<link type="text/css" rel="stylesheet" href="css/nouislider.min.css" />
+
+	<!-- Font Awesome Icon -->
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+
+	<!-- Custom stlylesheet -->
+	<link type="text/css" rel="stylesheet" href="css/style.css" />
+
+</head>
+
+<body onload="show()">
+	<!-- <div id="snackbar">Leeftijd succesvol bewezen. Spel is in winkelwagen geplaatst.
+		<button onclick="hide()" id="x">
+			X
+		</button>
+	</div> -->
+
+	<!-- HEADER -->
+	<header>
+		<div id="top-header" style="padding-top: 0px; background-color: #7ecadf46 ;">
+			<!-- container -->
+			<div class="container" id="alert"
+				style="width: auto; display: -webkit-flex; display: flex; align-items: center;">
+				<div style=" font-size: 30px; position: relative; width: 100px; height: 100px; ">
+					<a target="blank" href="http://www.irma.app"><img id="logo" src="./img/irma-logo.png"
+							style="position: absolute; top: 0; bottom: 0;margin: auto; max-height: 60px; max-width: 50vw;"
+							alt=""></a>
+				</div>
+				<div style=" width: 70%; padding-top: 20px; padding-left: 20px;" class="message">
+					<h4>
+						<span style="font-weight: 400;">Deze site is een <a
+								style="font-weight: 500;text-decoration: underline;" target=" blank"
+								href="http://www.irma.app">IRMA</a> demo en geen echte
+							webwinkel.
+							Gebruik de IRMA
+							app (<a style="font-weight: 500;text-decoration: underline;" target="blank"
+								href="https://privacybydesign.foundation/download/">download</a> en
+							<a style="font-weight: 500;text-decoration: underline;" target="blank"
+								href="https://services.nijmegen.nl/irma/gemeente/start">vullen</a>) om
+							op een privacy-vriendelijke manier aan te tonen dat je
+							oud genoeg bent om een van deze games te kopen.</span>
+					</h4>
+				</div>
+				<div id="irma" style="text-align: right; width: 30%; padding-top: 20px; padding-right: 25px;">
+					<h4><a target="blank" style="font-weight: 700;text-decoration: underline;"
+							href="http://www.irma.app">IRMA?</a>
+
+					</h4>
+				</div>
+			</div>
+		</div>
+		<div style="padding-top: 20px; padding-bottom: 20px; background-color: #15161d ; ">
+			<!-- container -->
+			<div class="container" style="width: auto;">
+				<div
+					style="float: left; color: white; font-size: 30px; position: relative; width: 200px; height: 80px; ">
+					<a href="index.html"><img src="./img/angrygames-logo.png"
+							style="position: absolute; top: 0; bottom: 0;margin: auto; max-height: 60px; max-width: 50vw;"
+							alt=""></a>
+				</div>
+				<div class="col-md-3 clearfix" style="float: right; width: 20%;">
+					<div class="header-ctn" style="float: right; padding-top: 25px;">
+
+
+						<!-- Cart -->
+						<div class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+								<i class="fa fa-shopping-cart"></i>
+								<span>Winkelwagen</span>
+								<div class="qty">1</div>
+							</a>
+
+							<!-- /Cart -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /TOP HEADER -->
+	</header>
+	<!-- /HEADER -->
+
+
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb" class="section" style="background: #F6FFF5;">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header" style="text-transform: none; ">Leeftijdscontrole succesvol.</h3>
+				</div>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- SECTION -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+
+			<!-- row -->
+			<div class="row">
+				<!-- Order Details -->
+				<!-- Product main img -->
+				<div class="col-md-4">
+					<div id="product-main-img">
+						<div class="">
+							<img id="game-image" alt="" style="width: 100%">
+						</div>
+					</div>
+				</div>
+				<!-- /Product main img -->
+
+				<div class="col-md-7 order-details" style="margin-top: 15px; padding: 0px 30px 20px;">
+					<div class="section-title text-center">
+						<h3 class="title">Demo winkelwagen</h3>
+					</div>
+					<div class="order-summary">
+						<div class="order-col">
+							<div><strong>Product</strong></div>
+							<div><strong>TOTAL</strong></div>
+						</div>
+						<div class="order-products">
+							<div class="order-col">
+								<div id="gamename"></div>
+								<div>Gratis</div>
+							</div>
+						</div>
+						<!-- <div class="order-col">
+							<div>Verzendkosten</div>
+							<div><strong>Gratis</strong></div>
+						</div> -->
+						<div class="order-col">
+							<div><strong>TOTAL</strong></div>
+							<div><strong class="order-total" style="color: black;">0.00€</strong></div>
+						</div>
+					</div>
+					<!-- <div class="payment-method">
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-1">
+							<label for="payment-1">
+								<span></span>
+								iDeal
+							</label>
+						</div>
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-2">
+							<label for="payment-2">
+								<span></span>
+								Invoice
+							</label>
+						</div>
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-3">
+							<label for="payment-3">
+								<span></span>
+								Paypal
+							</label>
+						</div>
+					</div> -->
+					<div>
+						<p>
+							Dit is alleen een demo om de leeftijdscontrole inzichtelijk te maken.
+						</p>
+					</div>
+					<a href="#"
+						onclick="alert('Dit is alleen een demo pagina. Het is helaas niet mogelijk het spel echt te bestellen.');"
+						class="primary-btn order-submit"
+						style="background-color: white; color: black;   border: 2px solid;	min-width: 250px; max-width: 100%;	float: left; margin-right: 20px;			">Bestellen</a>
+					<a href="index.html" class="primary-btn order-submit"
+						style="background-color: black; color: white;  padding: 14px 32px; 	min-width: 250px;  	max-width: 100%;			float: left;			">Demo
+						opnieuw proberen.</a>
+				</div>
+				<!-- /Order Details -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /SECTION -->
+	<!-- FOOTER -->
+	<footer id="footer">
+		<!-- bottom footer -->
+		<div id="bottom-footer" style="padding-bottom: 20px; padding-top: 5px;">
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<span class="copyright" style="font-size: 14px;">
+							<!-- Link back to Colorlib has been removed. Lincense has been purchased.  -->
+							Deze site is een fictieve game-winkel, die aspecten van IRMA demonstreert.<br> Door middel
+							van een leeftijdsgrens-attribuut toont u aan dat u oud genoeg bent om de games te kopen.<br>
+							De spelletjes zijn niet echt en dienen alleen ter illustratie. <br>
+							Meer over IRMA: <a style="color: white;" href="http://www.irma.app">www.irma.app</a>
+
+						</span>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /bottom footer -->
+	</footer>
+	<!-- /FOOTER -->
+
+	<!-- jQuery Plugins -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="js/nouislider.min.js"></script>
+	<script src="js/jquery.zoom.min.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		var game_id = location.search.split("game=")[1];
+		$('#game-image').attr('src', 'img/' + game_id + '.png');
+		let products = {
+			'product01': 'Fog Fighter',
+			'product02': 'Crazy Courier',
+			'product03': 'Moonlight Mission',
+			'product04': 'Droned'
+		}
+		$('#gamename').html(products[game_id]);
+	</script>
+</body>
+
+</html>
