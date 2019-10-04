@@ -86,7 +86,7 @@
 	$('.add-to-cart-btn').on('click', function (element) {
 		$('#snackbar').removeClass('show');
 		console.log("Age verification started");
-		$.get('/start_session.php?type='+element.currentTarget.attr('data-minage')+'plus', function (sessionpackagejson) {
+		$.get('/start_session.php?type='+element.currentTarget.getAttribute('data-minage')+'plus', function (sessionpackagejson) {
 			let sessionpackage = JSON.parse(sessionpackagejson);
 			let options = {
 				server: sessionpackage.sessionPtr.u.split('/irma')[0],
