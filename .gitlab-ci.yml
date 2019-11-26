@@ -1,0 +1,15 @@
+image: privacybydesign/debian:latest
+
+stages:
+  - build
+
+before_script:
+  - set -euxo pipefail
+
+site:
+  stage: build
+  artifacts:
+    paths:
+      - ./*
+  script:
+    - sleep 0
