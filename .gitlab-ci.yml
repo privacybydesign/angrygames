@@ -14,4 +14,5 @@ site:
     paths:
       - ./*
   script:
-    - sleep 0
+    - rm .gitlab-ci.yml
+    - rm -rf .git

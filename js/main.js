@@ -82,46 +82,71 @@
 		$('#product-main-img .product-preview').zoom();
 	}
 
-	// Age verification with IRMA
+	// Go to age verification page
 	$('.add-to-cart-btn').on('click', function (element) {
-		$('#snackbar').removeClass('show');
-		console.log("Age verification started");
-		$.get('/start_session.php?type='+element.currentTarget.getAttribute('data-minage')+'plus', function (sessionpackagejson) {
-			let sessionpackage = JSON.parse(sessionpackagejson);
-			let options = {
-				server: sessionpackage.sessionPtr.u.split('/irma')[0],
-				token: sessionpackage.token,
-				language: 'nl'
-			};
-			let promise = irma.handleSession(sessionpackage.sessionPtr, options);
-
-			let success = function (data) {
-				console.log("Session successful!");
-				console.log("Result:", data);
-				// Continue to order page if user is 18+
-				if (data.disclosed[0][0].rawvalue.toLowerCase() === 'yes') {
-					window.location.href = 'cart.html?game=' + element.currentTarget.id;
-				} else {
-					$('#snackbar-content').html('U hebt niet de juiste leeftijd om dit artikel te mogen bestellen.');
-					$('#snackbar').addClass('show');
-				}
-			};
-
-			let error = function (data) {
-				if (data === 'CANCELLED') {
-					console.log("Session cancelled!");
-					$('#snackbar-content').html('Leeftijdsverificatie via IRMA is geannuleerd.');
-					$('#snackbar').addClass('show');
-				} else {
-					console.log("Session failed!");
-					console.log("Error data:", data);
-					$('#snackbar-content').html('Er is een fout opgetreden bij de leeftijdsverificatie via IRMA.');
-					$('#snackbar').addClass('show');
-				}
-			};
-
-			promise.then(success, error);
-		});
+		sessionStorage.setItem('minage', element.currentTarget.getAttribute('data-minage'));
+		sessionStorage.setItem('productname', element.currentTarget.getAttribute('data-productname'));
+		sessionStorage.setItem('productid', element.currentTarget.id);
+		window.location.href = 'cart.html';
 	});
+
+	// If no product is chosen yet, return to the index page.
+	if (location.pathname.includes('cart.html') && !sessionStorage.getItem('productid'))
+		location.href = 'index.html';
+
+	// Age verification with IRMA
+	if ( irma ) {
+		console.log("Age verification started");
+
+		irma.new({
+			element:   '#irma-web-element',
+
+			session: {
+				url: '',
+				start: {
+					url: o => `start_session.php?type=` + sessionStorage.getItem('minage') + 'plus',
+					body: null,
+					headers: [],
+					method: 'GET',
+				},
+				mapping: {
+					sessionToken: r => r,
+				},
+				result: {
+					url: (o, t) => `${t.sessionPtr.u.split('/irma')[0]}/session/${t.token}/result`,
+				}
+			},
+
+			translations: {
+				'success': 'Gegevens ontvangen.'
+			},
+		});
+
+		let success = function (data) {
+			console.log("Session successful!");
+			console.log("Result:", data);
+			// Continue to order page if user is 18+
+			if (data.disclosed[0][0].rawvalue.toLowerCase() === 'yes') {
+				setTimeout(() => {
+					$('#phase-agecheck').hide();
+					$('#phase-finished').show();
+					$('#breadcrumb').show();
+					$('html').scrollTop(0);
+				}, 1000);
+			} else {
+				$('#snackbar-content').html('U hebt niet de juiste leeftijd om dit artikel te mogen bestellen.');
+				$('#snackbar').addClass('show');
+			}
+		};
+
+		let error = function (data) {
+			console.log("Session failed!");
+			console.log("Error data:", data);
+			$('#snackbar-content').html('Er is een fout opgetreden bij de leeftijdsverificatie via IRMA.');
+			$('#snackbar').addClass('show');
+		};
+
+		irma.start().then(success, error);
+	}
 
 })(jQuery);

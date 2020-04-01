@@ -30,7 +30,7 @@
 
 </head>
 
-<body onload="show()">
+<body>
 	<!-- <div id="snackbar">Leeftijd succesvol bewezen. Spel is in winkelwagen geplaatst.
 		<button onclick="hide()" id="x">
 			X
@@ -105,7 +105,7 @@
 
 
 	<!-- BREADCRUMB -->
-	<div id="breadcrumb" class="section" style="background: #F6FFF5;">
+	<div id="breadcrumb" class="section" style="background: #F6FFF5; display: none">
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
@@ -153,38 +153,21 @@
 								<div>Gratis</div>
 							</div>
 						</div>
-						<!-- <div class="order-col">
-							<div>Verzendkosten</div>
-							<div><strong>Gratis</strong></div>
-						</div> -->
 						<div class="order-col">
 							<div><strong>TOTAL</strong></div>
 							<div><strong class="order-total" style="color: black;">0.00€</strong></div>
 						</div>
 					</div>
-					<!-- <div class="payment-method">
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-1">
-							<label for="payment-1">
-								<span></span>
-								iDeal
-							</label>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-2">
-							<label for="payment-2">
-								<span></span>
-								Invoice
-							</label>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-3">
-							<label for="payment-3">
-								<span></span>
-								Paypal
-							</label>
-						</div>
-					</div> -->
+					<div id="phase-agecheck" style="display: block">
+						<p style="padding-bottom: 22px">
+							Op producten uit je winkelwagen is een leeftijdsgrens van toepassing.
+							Bewijs eerst met IRMA dat je oud genoeg bent.
+						</p>
+						<section id="irma-web-element" style="margin: auto"></section>
+						<a href="index.html" class="primary-btn order-submit"
+						   style="display: table; margin: 30px auto 0;  background-color: black; color: white; padding: 14px 32px; min-width: 250px; max-width: 100%;">Terug</a>
+					</div>
+					<div id="phase-finished" style="display: none">
 					<div>
 						<p>
 							Dit is alleen een demo om de leeftijdscontrole inzichtelijk te maken.
@@ -197,6 +180,7 @@
 					<a href="index.html" class="primary-btn order-submit"
 						style="background-color: black; color: white;  padding: 14px 32px; 	min-width: 250px;  	max-width: 100%;			float: left;			">Demo
 						opnieuw proberen.</a>
+					</div>
 				</div>
 				<!-- /Order Details -->
 			</div>
@@ -237,17 +221,14 @@
 	<script src="js/slick.min.js"></script>
 	<script src="js/nouislider.min.js"></script>
 	<script src="js/jquery.zoom.min.js"></script>
+	<script src="js/irma.js"></script>
 	<script src="js/main.js"></script>
 	<script>
-		var game_id = location.search.split("game=")[1];
+		var game_id = sessionStorage.getItem('productid');
+		var game_age = sessionStorage.getItem('minage');
+		var game_name = `${sessionStorage.getItem('productname')} (${game_age}+)`;
 		$('#game-image').attr('src', 'img/' + game_id + '.png');
-		let products = {
-			'product01': 'Fog Fighter',
-			'product02': 'Crazy Courier',
-			'product03': 'Moonlight Mission',
-			'product04': 'Droned'
-		}
-		$('#gamename').html(products[game_id]);
+		$('#gamename').html(game_name);
 	</script>
 </body>
 
