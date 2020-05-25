@@ -95,7 +95,7 @@
 		location.href = 'index.html';
 
 	// Age verification with IRMA
-	if ( irma ) {
+	if ( window.irma ) {
 		console.log("Age verification started");
 
 		irma.new({
@@ -109,11 +109,8 @@
 					headers: [],
 					method: 'GET',
 				},
-				mapping: {
-					sessionToken: r => r,
-				},
 				result: {
-					url: (o, t) => `${t.sessionPtr.u.split('/irma')[0]}/session/${t.token}/result`,
+					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,
 				}
 			},
 

@@ -1070,7 +1070,7 @@ textarea.input {
   z-index: 2;
 }
 
-/* 
+/*
 .product:hover .add-to-cart {
   -webkit-transform: translateY(100%);
   -ms-transform: translateY(100%);
@@ -2388,7 +2388,7 @@ div#line1:hover span#b {
     padding: 0px;
   }
 
-  #irma {
+  #irma-info {
     padding: 15px 0px 0px 0px !important;
     text-align: center !important;
   }
