@@ -98,16 +98,13 @@
 	if ( window.irma ) {
 		console.log("Age verification started");
 
-		irma.new({
+		let irmaCore = irma.newWeb({
 			element:   '#irma-web-element',
 
 			session: {
 				url: '',
 				start: {
 					url: o => `start_session.php?type=` + sessionStorage.getItem('minage') + 'plus',
-					body: null,
-					headers: [],
-					method: 'GET',
 				},
 				result: {
 					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,
@@ -143,7 +140,7 @@
 			$('#snackbar').addClass('show');
 		};
 
-		irma.start().then(success, error);
+		irmaCore.start().then(success, error);
 	}
 
 })(jQuery);
