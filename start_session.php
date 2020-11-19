@@ -52,7 +52,7 @@ function start_session($type) {
             'method' => 'POST',
             'header' => "Content-type: application/json\r\n"
                 . "Content-Length: " . strlen($jsonsr) . "\r\n"
-                . "Authorization: " . API_TOKEN . "\r\n",
+                . (!empty(API_TOKEN) ? "Authorization: " . API_TOKEN . "\r\n" : ""),
             'content' => $jsonsr
         )
     );
