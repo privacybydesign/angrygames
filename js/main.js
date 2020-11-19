@@ -106,6 +106,14 @@
 				start: {
 					url: o => `start_session.php?type=` + sessionStorage.getItem('minage') + 'plus',
 				},
+				mapping: {
+					sessionPtr: pkg => {
+						return {
+							irmaqr: pkg.sessionPtr.irmaqr,
+							u: pkg.sessionPtr.u.replace(/https:\/\/(staging\.)?privacybydesign\.foundation/, "https://$1angrygames.nl")
+						};
+					},
+				},
 				result: {
 					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,
 				}
