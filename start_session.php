@@ -2,7 +2,6 @@
 require_once 'config.php';
 
 date_default_timezone_set('UTC');
-$protocol = explode(':', IRMA_SERVER_URL, 2)[0];
 
 $sprequests = [
     '18plus' => [
