@@ -2,7 +2,6 @@
 require_once 'config.php';
 
 date_default_timezone_set('UTC');
-$protocol = explode(':', IRMA_SERVER_URL, 2)[0];
 
 $sprequests = [
     '18plus' => [
@@ -44,7 +43,7 @@ $sprequests = [
 ];
 
 function start_session($type) {
-    global $sprequests, $protocol;
+    global $sprequests;
 
     if (array_key_exists($type, $sprequests))
         $sessionrequest = $sprequests[$type];
@@ -54,12 +53,12 @@ function start_session($type) {
     $jsonsr = json_encode($sessionrequest);
 
     $api_call = array(
-        $protocol => array(
+        'http' => array(
             'method' => 'POST',
             'header' => "Content-type: application/json\r\n"
-                . "Content-Length: " . strlen($jsonsr) . "\r\n"
-                . (!empty(API_TOKEN) ? "Authorization: " . API_TOKEN . "\r\n" : ""),
-            'content' => $jsonsr
+                        . "Content-Length: " . strlen($jsonsr) . "\r\n"
+                        . "Authorization: " . API_TOKEN . "\r\n",
+            'content' => $jsonsr,
         )
     );
 
