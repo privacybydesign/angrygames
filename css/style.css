@@ -28,21 +28,20 @@ Table OF Contents
 ------ Main nav
 ------ Responsive Nav
 4 > CATEGORY SHOP
-5 > HOT DEAL
-6 > PRODUCT
+5 > PRODUCT
 ------ Product
 ------ Widget product
 ------ Product slick
-7 > STORE PAGE
+6 > STORE PAGE
 ------ Aside
 ------ Store
-8 > PRODUCT DETAILS PAGE
+7 > PRODUCT DETAILS PAGE
 ------ Product view
 ------ Product details
 ------ Product tab
-9 > CHECKOUT PAGE
-10 > NEWSLETTER
-11 > FOOTER
+8 > CHECKOUT PAGE
+9 > NEWSLETTER
+10 > FOOTER
 11 > SLICK STYLE
 12 > RESPONSIVE
 ------------------------------------*/
@@ -817,71 +816,10 @@ textarea.input {
   text-transform: uppercase;
 }
 
-/*=========================================================
-	05 -> HOT DEAL
-===========================================================*/
 
-#hot-deal.section {
-  padding: 60px 0px;
-  margin: 30px 0px;
-  background-color: #E4E7ED;
-  background-image: url('../img/hotdeal-irma.png');
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hot-deal {
-  text-align: center;
-}
-
-.hot-deal .hot-deal-countdown {
-  margin-bottom: 30px;
-}
-
-.hot-deal .hot-deal-countdown>li {
-  position: relative;
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  background: #D10024e6;
-  text-align: center;
-  border-radius: 50%;
-  margin: 0px 5px;
-}
-
-.hot-deal .hot-deal-countdown>li>div {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
-.hot-deal .hot-deal-countdown>li>div h3 {
-  color: #FFF;
-  margin-bottom: 0px;
-}
-
-.hot-deal .hot-deal-countdown>li>div span {
-  display: block;
-  font-size: 10px;
-  text-transform: uppercase;
-  color: #FFF;
-}
-
-.hot-deal p {
-  text-transform: uppercase;
-  font-size: 24px;
-}
-
-.hot-deal .cta-btn {
-  margin-top: 15px;
-}
 
 /*=========================================================
-	06 -> PRODUCT
+	05 -> PRODUCT
 ===========================================================*/
 
 /*----------------------------*\
@@ -1249,7 +1187,7 @@ textarea.input {
 }
 
 /*=========================================================
-	07 -> PRODUCTS PAGE
+	06 -> PRODUCTS PAGE
 ===========================================================*/
 
 /*----------------------------*\
@@ -1327,7 +1265,7 @@ textarea.input {
 }
 
 /*----------------------------*\
-	Store
+	6 -> Store
 \*----------------------------*/
 
 .store-filter {
@@ -1433,7 +1371,7 @@ textarea.input {
 }
 
 /*=========================================================
-	08 -> PRODUCT DETAILS PAGE
+	07 -> PRODUCT DETAILS PAGE
 ===========================================================*/
 
 /*----------------------------*\
@@ -1896,7 +1834,7 @@ textarea.input {
 }
 
 /*=========================================================
-	09 -> CHECKOUT PAGE
+	08 -> CHECKOUT PAGE
 ===========================================================*/
 
 .billing-details {
@@ -1971,7 +1909,7 @@ textarea.input {
 }
 
 /*=========================================================
-	10 -> NEWSLETTER
+	9 -> NEWSLETTER
 ===========================================================*/
 
 #newsletter.section {
@@ -2057,7 +1995,7 @@ textarea.input {
 }
 
 /*=========================================================
-	11 -> FOOTER
+	10 -> FOOTER
 ===========================================================*/
 
 #footer {
@@ -2117,7 +2055,7 @@ textarea.input {
 }
 
 /*=========================================================
-	12 -> SLICK STYLE
+	11 -> SLICK STYLE
 ===========================================================*/
 
 /*----------------------------*\
@@ -2201,7 +2139,7 @@ textarea.input {
 }
 
 /*=========================================================
-	13 -> RESPONSIVE
+	12 -> RESPONSIVE
 ===========================================================*/
 
 @media only screen and (max-width: 1201px) {}
