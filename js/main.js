@@ -95,11 +95,11 @@
 		location.href = 'index.html';
 
 	// Age verification with IRMA
-	if ( window.irma ) {
+	if ( window.yivi ) {
 		console.log("Age verification started");
 
-		let irmaCore = irma.newWeb({
-			element:   '#irma-web-element',
+		let yiviCore = yivi.newWeb({
+			element:   '#yivi-web-element',
 
 			session: {
 				url: '',
@@ -109,13 +109,13 @@
 				mapping: {
 					sessionPtr: pkg => {
 						return {
-							irmaqr: pkg.sessionPtr.irmaqr,
+							yiviqr: pkg.sessionPtr.yiviqr,
 							u: pkg.sessionPtr.u.replace(/https:\/\/(staging\.)?privacybydesign\.foundation/, "https://$1angrygames.nl")
 						};
 					},
 				},
 				result: {
-					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,
+					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/yivi')[0]}/session/${sessionToken}/result`,
 				}
 			},
 
@@ -149,7 +149,7 @@
 			$('#snackbar').addClass('show');
 		};
 
-		irmaCore.start().then(success, error);
+		yiviCore.start().then(success, error);
 	}
 
 })(jQuery);
