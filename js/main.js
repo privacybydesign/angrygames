@@ -94,7 +94,7 @@
 	if (location.pathname.includes('cart.html') && !sessionStorage.getItem('productid'))
 		location.href = 'index.html';
 
-	// Age verification with IRMA
+	// Age verification with Yivi
 	if ( window.yivi ) {
 		console.log("Age verification started");
 
@@ -102,20 +102,12 @@
 			element:   '#yivi-web-element',
 
 			session: {
-				url: '',
+				url: '..',
 				start: {
 					url: o => `start_session.php?type=` + sessionStorage.getItem('minage') + 'plus',
 				},
-				mapping: {
-					sessionPtr: pkg => {
-						return {
-							yiviqr: pkg.sessionPtr.yiviqr,
-							u: pkg.sessionPtr.u.replace(/https:\/\/(staging\.)?privacybydesign\.foundation/, "https://$1angrygames.nl")
-						};
-					},
-				},
 				result: {
-					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/yivi')[0]}/session/${sessionToken}/result`,
+					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,
 				}
 			},
 
@@ -128,7 +120,7 @@
 			console.log("Session successful!");
 			console.log("Result:", data);
 			// Continue to order page if user is 18+
-			let attr = data.disclosed[0][0].rawvalue.toLowerCase();
+			let attr = daawvalue.toLowerCase();
 			if (attr === 'yes' || attr === 'ja') {
 				setTimeout(() => {
 					$('#phase-agecheck').hide();
@@ -145,7 +137,7 @@
 		let error = function (data) {
 			console.log("Session failed!");
 			console.log("Error data:", data);
-			$('#snackbar-content').html('Er is een fout opgetreden bij de leeftijdsverificatie via IRMA.');
+			$('#snackbar-content').html('Er is een fout opgetreden bij de leeftijdsverificatie via Yivi.');
 			$('#snackbar').addClass('show');
 		};
 
@@ -153,3 +145,4 @@
 	}
 
 })(jQuery);
+ta.disclosed[0][0].r
