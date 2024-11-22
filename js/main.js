@@ -120,7 +120,7 @@
 			console.log("Session successful!");
 			console.log("Result:", data);
 			// Continue to order page if user is 18+
-			let attr = daawvalue.toLowerCase();
+			let attr = data.disclosed[0][0].rawvalue.toLowerCase();
 			if (attr === 'yes' || attr === 'ja') {
 				setTimeout(() => {
 					$('#phase-agecheck').hide();
