@@ -145,4 +145,3 @@
 	}
 
 })(jQuery);
-ta.disclosed[0][0].r
