@@ -66,6 +66,9 @@ func TestStartSessionAgeTypes(t *testing.T) {
 			if got := rec.Header().Get("Content-Type"); got != "application/json" {
 				t.Errorf("Content-Type = %q, want application/json", got)
 			}
+			if got := rec.Header().Get("Cache-Control"); got != "no-store" {
+				t.Errorf("Cache-Control = %q, want no-store", got)
+			}
 			if irma.path != "POST /session" {
 				t.Errorf("IRMA server got %q, want POST /session", irma.path)
 			}
@@ -167,6 +170,24 @@ func TestStartSessionRejectsOtherMethods(t *testing.T) {
 
 	if rec.Code != http.StatusMethodNotAllowed {
 		t.Errorf("status = %d, want 405", rec.Code)
+	}
+	if irma.path != "" {
+		t.Errorf("IRMA server was called with %q, want no call", irma.path)
+	}
+}
+
+func TestStartSessionRejectsHead(t *testing.T) {
+	irma := newFakeIrma(t, http.StatusOK, testIrmaSession)
+	h := newHandler(newIrmaClient(irma.URL, testAuthToken))
+
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequest(http.MethodHead, "/start-session?type=18plus", nil))
+
+	if rec.Code != http.StatusMethodNotAllowed {
+		t.Errorf("status = %d, want 405", rec.Code)
+	}
+	if got := rec.Header().Get("Allow"); got != http.MethodGet {
+		t.Errorf("Allow = %q, want GET", got)
 	}
 	if irma.path != "" {
 		t.Errorf("IRMA server was called with %q, want no call", irma.path)

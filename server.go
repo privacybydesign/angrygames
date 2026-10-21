@@ -16,6 +16,10 @@ var staticFiles embed.FS
 const (
 	invalidRequestMessage = "Invalid request"
 	serverErrorMessage    = "Internal server error"
+
+	headerAllow        = "Allow"
+	headerCacheControl = "Cache-Control"
+	cacheNoStore       = "no-store"
 )
 
 func init() {
@@ -43,6 +47,13 @@ func newHandler(irma *irmaClient) http.Handler {
 
 func startSessionHandler(irma *irmaClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// A "GET" route also matches HEAD, which would start a session nobody reads.
+		if r.Method == http.MethodHead {
+			w.Header().Set(headerAllow, http.MethodGet)
+			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+			return
+		}
+
 		request, ok := sessionRequests[r.URL.Query().Get("type")]
 		if !ok {
 			http.Error(w, invalidRequestMessage, http.StatusBadRequest)
@@ -56,6 +67,8 @@ func startSessionHandler(irma *irmaClient) http.HandlerFunc {
 			return
 		}
 
+		// The response holds the session token.
+		w.Header().Set(headerCacheControl, cacheNoStore)
 		w.Header().Set(headerContentType, contentTypeJSON)
 		if _, err := w.Write(response); err != nil {
 			log.Printf("writing session response: %v", err)
