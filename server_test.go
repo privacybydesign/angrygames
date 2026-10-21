@@ -13,6 +13,25 @@ import (
 const (
 	testAuthToken   = "secret-token"
 	testIrmaSession = `{"sessionPtr":{"u":"http://irma.example/irma/abc","irmaqr":"disclosing"},"token":"tok"}`
+	testIrmaURL     = "http://irma.invalid"
+	testStart18Plus = "/start-session?type=18plus"
+
+	testInvalidRequest = "Invalid request"
+	testServerError    = "Internal server error"
+
+	testHTMLType = "text/html; charset=utf-8"
+	testJSType   = "text/javascript; charset=utf-8"
+)
+
+// Wire values are spelled out here instead of reusing the server's constants,
+// so a wrong constant there fails a test.
+const (
+	wireAllow         = "Allow"
+	wireAuthorization = "Authorization"
+	wireCacheControl  = "Cache-Control"
+	wireContentType   = "Content-Type"
+	wireJSON          = "application/json"
+	wireNoStore       = "no-store"
 )
 
 // fakeIrma records the last request it received and answers with status/body.
@@ -31,8 +50,8 @@ func newFakeIrma(t *testing.T, status int, body string) *fakeIrma {
 	f.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		received, _ := io.ReadAll(r.Body)
 		f.path = r.Method + " " + r.URL.Path
-		f.authorization = r.Header.Get("Authorization")
-		f.contentType = r.Header.Get("Content-Type")
+		f.authorization = r.Header.Get(wireAuthorization)
+		f.contentType = r.Header.Get(wireContentType)
 		f.body = string(received)
 		w.WriteHeader(status)
 		_, _ = io.WriteString(w, body)
@@ -63,11 +82,11 @@ func TestStartSessionAgeTypes(t *testing.T) {
 			if rec.Body.String() != testIrmaSession {
 				t.Errorf("body = %q, want the IRMA server response unchanged", rec.Body.String())
 			}
-			if got := rec.Header().Get("Content-Type"); got != "application/json" {
-				t.Errorf("Content-Type = %q, want application/json", got)
+			if got := rec.Header().Get(wireContentType); got != wireJSON {
+				t.Errorf("Content-Type = %q, want %q", got, wireJSON)
 			}
-			if got := rec.Header().Get("Cache-Control"); got != "no-store" {
-				t.Errorf("Cache-Control = %q, want no-store", got)
+			if got := rec.Header().Get(wireCacheControl); got != wireNoStore {
+				t.Errorf("Cache-Control = %q, want %q", got, wireNoStore)
 			}
 			if irma.path != "POST /session" {
 				t.Errorf("IRMA server got %q, want POST /session", irma.path)
@@ -75,8 +94,8 @@ func TestStartSessionAgeTypes(t *testing.T) {
 			if irma.authorization != testAuthToken {
 				t.Errorf("Authorization = %q, want %q", irma.authorization, testAuthToken)
 			}
-			if irma.contentType != "application/json" {
-				t.Errorf("Content-Type to IRMA = %q, want application/json", irma.contentType)
+			if irma.contentType != wireJSON {
+				t.Errorf("Content-Type to IRMA = %q, want %q", irma.contentType, wireJSON)
 			}
 
 			want := `{"@context":"https://irma.app/ld/request/disclosure/v2","disclose":[[` +
@@ -96,7 +115,7 @@ func TestStartSessionWithoutToken(t *testing.T) {
 	irma := newFakeIrma(t, http.StatusOK, testIrmaSession)
 	h := newHandler(newIrmaClient(irma.URL, ""))
 
-	rec := get(t, h, "/start-session?type=18plus")
+	rec := get(t, h, testStart18Plus)
 
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, want 200", rec.Code)
@@ -123,8 +142,8 @@ func TestStartSessionInvalidType(t *testing.T) {
 			if rec.Code != http.StatusBadRequest {
 				t.Errorf("status = %d, want 400", rec.Code)
 			}
-			if got := strings.TrimSpace(rec.Body.String()); got != "Invalid request" {
-				t.Errorf("body = %q, want %q", got, "Invalid request")
+			if got := strings.TrimSpace(rec.Body.String()); got != testInvalidRequest {
+				t.Errorf("body = %q, want %q", got, testInvalidRequest)
 			}
 			if irma.path != "" {
 				t.Errorf("IRMA server was called with %q, want no call", irma.path)
@@ -145,28 +164,29 @@ func TestStartSessionIrmaFailure(t *testing.T) {
 		"invalid url":  "://bad",
 		"empty url":    "",
 	}
+
 	for name, url := range tests {
 		t.Run(name, func(t *testing.T) {
 			h := newHandler(newIrmaClient(url, testAuthToken))
 
-			rec := get(t, h, "/start-session?type=18plus")
+			rec := get(t, h, testStart18Plus)
 
 			if rec.Code != http.StatusInternalServerError {
 				t.Errorf("status = %d, want 500", rec.Code)
 			}
-			if got := strings.TrimSpace(rec.Body.String()); got != "Internal server error" {
-				t.Errorf("body = %q, want %q", got, "Internal server error")
+			if got := strings.TrimSpace(rec.Body.String()); got != testServerError {
+				t.Errorf("body = %q, want %q", got, testServerError)
 			}
 		})
 	}
 }
 
-func TestStartSessionRejectsOtherMethods(t *testing.T) {
+func TestStartSessionRejectsPost(t *testing.T) {
 	irma := newFakeIrma(t, http.StatusOK, testIrmaSession)
 	h := newHandler(newIrmaClient(irma.URL, testAuthToken))
 
 	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/start-session?type=18plus", nil))
+	h.ServeHTTP(rec, httptest.NewRequest(http.MethodPost, testStart18Plus, nil))
 
 	if rec.Code != http.StatusMethodNotAllowed {
 		t.Errorf("status = %d, want 405", rec.Code)
@@ -181,12 +201,12 @@ func TestStartSessionRejectsHead(t *testing.T) {
 	h := newHandler(newIrmaClient(irma.URL, testAuthToken))
 
 	rec := httptest.NewRecorder()
-	h.ServeHTTP(rec, httptest.NewRequest(http.MethodHead, "/start-session?type=18plus", nil))
+	h.ServeHTTP(rec, httptest.NewRequest(http.MethodHead, testStart18Plus, nil))
 
 	if rec.Code != http.StatusMethodNotAllowed {
 		t.Errorf("status = %d, want 405", rec.Code)
 	}
-	if got := rec.Header().Get("Allow"); got != http.MethodGet {
+	if got := rec.Header().Get(wireAllow); got != http.MethodGet {
 		t.Errorf("Allow = %q, want GET", got)
 	}
 	if irma.path != "" {
@@ -194,7 +214,7 @@ func TestStartSessionRejectsHead(t *testing.T) {
 	}
 }
 
-func TestSessionRequestsAreValidJSON(t *testing.T) {
+func TestSessionRequestsMarshal(t *testing.T) {
 	for name, request := range sessionRequests {
 		if _, err := json.Marshal(request); err != nil {
 			t.Errorf("%s: %v", name, err)
@@ -203,14 +223,14 @@ func TestSessionRequestsAreValidJSON(t *testing.T) {
 }
 
 func TestPagesAreServed(t *testing.T) {
-	h := newHandler(newIrmaClient("http://irma.invalid", ""))
+	h := newHandler(newIrmaClient(testIrmaURL, ""))
 
 	for target, wantType := range map[string]string{
-		"/":                  "text/html; charset=utf-8",
-		"/cart.html":         "text/html; charset=utf-8",
+		"/":                  testHTMLType,
+		"/cart.html":         testHTMLType,
 		"/css/style.css":     "text/css; charset=utf-8",
-		"/js/main.js":        "text/javascript; charset=utf-8",
-		"/js/yivi.js":        "text/javascript; charset=utf-8",
+		"/js/main.js":        testJSType,
+		"/js/yivi.js":        testJSType,
 		"/img/yivi-logo.svg": "image/svg+xml",
 		"/img/product01.png": "image/png",
 	} {
@@ -220,7 +240,7 @@ func TestPagesAreServed(t *testing.T) {
 			if rec.Code != http.StatusOK {
 				t.Fatalf("status = %d, want 200", rec.Code)
 			}
-			if got := rec.Header().Get("Content-Type"); got != wantType {
+			if got := rec.Header().Get(wireContentType); got != wantType {
 				t.Errorf("Content-Type = %q, want %q", got, wantType)
 			}
 			if rec.Body.Len() == 0 {
@@ -231,7 +251,7 @@ func TestPagesAreServed(t *testing.T) {
 }
 
 func TestFontMimeTypes(t *testing.T) {
-	h := newHandler(newIrmaClient("http://irma.invalid", ""))
+	h := newHandler(newIrmaClient(testIrmaURL, ""))
 
 	for target, wantType := range map[string]string{
 		"/fonts/fontawesome-webfont.eot":   "application/vnd.ms-fontobject",
@@ -247,7 +267,7 @@ func TestFontMimeTypes(t *testing.T) {
 			if rec.Code != http.StatusOK {
 				t.Fatalf("status = %d, want 200", rec.Code)
 			}
-			if got := rec.Header().Get("Content-Type"); got != wantType {
+			if got := rec.Header().Get(wireContentType); got != wantType {
 				t.Errorf("Content-Type = %q, want %q", got, wantType)
 			}
 		})
@@ -255,7 +275,7 @@ func TestFontMimeTypes(t *testing.T) {
 }
 
 func TestNonPublicFilesNotServed(t *testing.T) {
-	h := newHandler(newIrmaClient("http://irma.invalid", ""))
+	h := newHandler(newIrmaClient(testIrmaURL, ""))
 
 	for _, target := range []string{
 		"/config.php",
@@ -285,7 +305,7 @@ func TestNonPublicFilesNotServed(t *testing.T) {
 	}
 }
 
-func TestEmbeddedFilesArePublicOnly(t *testing.T) {
+func TestEmbeddedFilesPublicOnly(t *testing.T) {
 	allowedTopLevel := map[string]bool{
 		"index.html": true,
 		"cart.html":  true,
@@ -299,21 +319,24 @@ func TestEmbeddedFilesArePublicOnly(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	for _, entry := range entries {
 		if !allowedTopLevel[entry.Name()] {
 			t.Errorf("%q is embedded but is not a public asset", entry.Name())
 		}
 	}
+
 	if len(entries) != len(allowedTopLevel) {
 		t.Errorf("embedded %d top-level entries, want %d", len(entries), len(allowedTopLevel))
 	}
 }
 
-func TestFrontendUsesStartSessionPath(t *testing.T) {
+func TestFrontendSessionPath(t *testing.T) {
 	main, err := fs.ReadFile(staticFiles, "js/main.js")
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if !strings.Contains(string(main), "`start-session?type=`") {
 		t.Error("js/main.js does not start sessions at start-session")
 	}

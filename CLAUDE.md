@@ -12,7 +12,7 @@ age-verification sessions.
 
 - Static files are embedded with `//go:embed` in `server.go`. A new public
   file or directory must be added to that list, and to the allowlist in
-  `TestEmbeddedFilesArePublicOnly`. Nothing else in the repo may be served.
+  `TestEmbeddedFilesPublicOnly`. Nothing else in the repo may be served.
 - The runtime image is distroless and has no `/etc/mime.types`, so font MIME
   types are registered in `server.go`. Add any new asset extension that Go's
   built-in table lacks.
