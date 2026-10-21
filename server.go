@@ -56,7 +56,7 @@ func startSessionHandler(irma *irmaClient) http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set(headerContentType, contentTypeJSON)
 		if _, err := w.Write(response); err != nil {
 			log.Printf("writing session response: %v", err)
 		}

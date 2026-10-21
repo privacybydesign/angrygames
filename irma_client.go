@@ -14,6 +14,11 @@ import (
 const (
 	irmaRequestTimeout = 15 * time.Second
 	maxIrmaResponse    = 1 << 20
+	irmaSessionPath    = "/session"
+
+	headerAuthorization = "Authorization"
+	headerContentType   = "Content-Type"
+	contentTypeJSON     = "application/json"
 )
 
 type irmaClient struct {
@@ -38,13 +43,13 @@ func (c *irmaClient) startSession(ctx context.Context, request disclosureRequest
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.serverURL+"/session", bytes.NewReader(payload))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.serverURL+irmaSessionPath, bytes.NewReader(payload))
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(headerContentType, contentTypeJSON)
 	if c.authToken != "" {
-		req.Header.Set("Authorization", c.authToken)
+		req.Header.Set(headerAuthorization, c.authToken)
 	}
 
 	resp, err := c.client.Do(req)
