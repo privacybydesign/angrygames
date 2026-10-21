@@ -2,10 +2,8 @@ FROM golang:1.26.10 AS build
 WORKDIR /app
 COPY . .
 
-# compile with static linking
+# Static binary: the distroless static image has no libc.
 RUN CGO_ENABLED=0 go build -o ./server
-
-# -----------------------------------------------------
 
 FROM gcr.io/distroless/static-debian12:nonroot AS runtime
 COPY --from=build /app/server /app/server
