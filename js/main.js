@@ -104,7 +104,7 @@
 			session: {
 				url: '..',
 				start: {
-					url: o => `start_session.php?type=` + sessionStorage.getItem('minage') + 'plus',
+					url: o => `start-session?type=` + sessionStorage.getItem('minage') + 'plus',
 				},
 				result: {
 					url: (o, {sessionPtr, sessionToken}) => `${sessionPtr.u.split('/irma')[0]}/session/${sessionToken}/result`,

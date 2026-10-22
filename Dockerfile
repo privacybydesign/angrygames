@@ -1,13 +1,16 @@
-FROM php:8.0-apache
+FROM golang:1.26.10 AS build
+WORKDIR /app
+COPY . .
 
-WORKDIR /var/www/html
+# Static binary: the distroless static image has no libc.
+RUN CGO_ENABLED=0 go build -o ./server
 
-ADD . .
+FROM gcr.io/distroless/static-debian12:nonroot AS runtime
+COPY --from=build /app/server /app/server
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
-
-RUN echo Listen 8080 > /etc/apache2/ports.conf 
+# Declared explicitly to satisfy static scanners; the :nonroot tag already
+# defaults to this same user (UID 65532).
+USER nonroot:nonroot
 
 EXPOSE 8080
-
+ENTRYPOINT [ "/app/server" ]
