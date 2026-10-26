@@ -1,43 +1,27 @@
+# Delivery: builds, scans and pushes ghcr.io/privacybydesign/angrygames.
+# Push to master -> :edge, release -> :x.y.z and :latest. PR builds are scanned
+# in Status checks; published images are re-scanned weekly by image-rescan.yml.
 name: Delivery
 
-on: 
+on:
   push:
-    branches: [ master ]
+    branches: [master]
   release:
     # Note: a current limitation is that when a release is edited after publication, then the Docker tags are not automatically updated.
-    types: [ published ]
+    types: [published]
+  workflow_dispatch:
 
-permissions:
-  contents: write
-  packages: write
+permissions: {}
 
 jobs:
-  publish-docker-image:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=raw,value=edge
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}      
-      
-      - name: Build container and push to GitHub Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  docker:
+    uses: privacybydesign/github-workflows/.github/workflows/docker-publish.yml@v1
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+      id-token: write
+      attestations: write
+    with:
+      # The old Delivery tagged :latest on every stable release; keep doing so.
+      tag-latest: true
