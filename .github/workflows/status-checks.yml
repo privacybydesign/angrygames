@@ -24,6 +24,8 @@ jobs:
     uses: privacybydesign/github-workflows/.github/workflows/go-checks.yml@v1
     permissions:
       contents: read
+    with:
+      golangci-lint-version: v2.15.0 # the default v2.12.2 cannot read Go >= 1.27.x
 
   # Builds and scans the image without pushing it; Delivery pushes from master.
   docker:
