@@ -99,7 +99,6 @@ func TestStartSessionAgeTypes(t *testing.T) {
 			}
 
 			want := `{"@context":"https://irma.app/ld/request/disclosure/v2","disclose":[[` +
-				`["pbdf.pbdf.ageLimits.over` + age + `"],` +
 				`["pbdf.nijmegen.ageLimits.over` + age + `"],` +
 				`["pbdf.gemeente.personalData.over` + age + `"],` +
 				`["pbdf.pilot-amsterdam.idcard.over` + age + `"],` +
