@@ -13,7 +13,6 @@ type disclosureRequest struct {
 
 // Each format takes the age limit and names one attribute that proves it.
 var ageAttributeFormats = []string{
-	"pbdf.pbdf.ageLimits.over%d",
 	"pbdf.nijmegen.ageLimits.over%d",
 	"pbdf.gemeente.personalData.over%d",
 	"pbdf.pilot-amsterdam.idcard.over%d",
